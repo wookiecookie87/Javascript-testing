@@ -34,7 +34,7 @@ $(function() {
          it('are defined and not empty', function(){
             allFeeds.forEach(function(feed){
                 expect(feed.url).toBeDefined();
-                expect(feed.url).not.toBeNull();
+                expect(feed.url.length).not.toBe(0);
             });
          })
 
@@ -47,7 +47,7 @@ $(function() {
          it('are defined and not empty', function(){
             allFeeds.forEach(function(feed){
                 expect(feed.name).toBeDefined();
-                expect(feed.name).not.toBeNull();
+                expect(feed.name.length).not.toBe(0);
             });
          })
     });
@@ -68,7 +68,7 @@ $(function() {
           * should have two expectations: does the menu display when
           * clicked and does it hide when clicked again.
           */
-        it('is toggling on click', function(){
+        it('is hiding and showing on click', function(){
             var classExist = $('body').hasClass('menu-hidden');
             $('.menu-icon-link').click();
             var newClassExist = $('body').hasClass('menu-hidden');
@@ -89,15 +89,13 @@ $(function() {
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
          beforeEach(function(done){
-             loadFeed(0, function(){
-                done();
-             });
+             loadFeed(0, done);
          });
 
-         it('gets ajax data', function(done) {
+         it('gets ajax data', function() {
             var len = $('.entry').length;
             expect(len).toBeGreaterThan(0);
-            done();
+            //done();
          });
     });
     /* TODO: Write a new test suite named "New Feed Selection"*/
@@ -106,21 +104,41 @@ $(function() {
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
-        var original = $('.entry');    
-        var changed = null;
+        var original = [];    
+        var changed = [];
 
-        $(".feed-list li").click();
-        // beforeEach(function(done){
-        //     loadFeed(0, function(){
-        //     done();
-        //     });
-        // });
+        beforeEach(function(done){
+            loadFeed(0, function(){
+                console.log("first async");
+                done();
+            });
 
-        it('changes data', function(done) {
-            changed = $('.entry');    
+        });
+
+        afterEach(function(done){
+            original = $('.entry');
+            console.log("first end");
             done();
+        });
+
+        beforeEach(function(done){
+            loadFeed(1, function(){
+                console.log("second async");
+                done();
+            });
+        });
+
+        afterEach(function(done){
+            changed = $('.entry');
+             console.log("second end");
+            done();
+        });
+
+        console.log(original);
+        console.log(changed);
+        it('changes data', function() { 
             for(var i = 0; i < original.length; i++){
-                expect(original[i].text()).not.toEqual(changed[i].text());
+                expect(original[i]).not.toEqual(changed[i]);
             }
         });
     });    
