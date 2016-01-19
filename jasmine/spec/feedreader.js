@@ -106,17 +106,22 @@ $(function() {
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
-        beforeEach(function(done){
-            loadFeed(0, function(){
-            done();
-            });
-        });
+        var original = $('.entry');    
+        var changed = null;
+
+        $(".feed-list li").click();
+        // beforeEach(function(done){
+        //     loadFeed(0, function(){
+        //     done();
+        //     });
+        // });
 
         it('changes data', function(done) {
-            var original = $('.entry');
-        
-            
+            changed = $('.entry');    
             done();
+            for(var i = 0; i < original.length; i++){
+                expect(original[i].text()).not.toEqual(changed[i].text());
+            }
         });
     });    
 }());
